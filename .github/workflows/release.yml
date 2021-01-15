@@ -10,9 +10,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - uses: ruby/setup-ruby@v1
+      - name: Configure Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+          server-id: sonatype
+          server-username: OSSRH_USER
+          server-password: OSSRH_PASS
+          gpg-private-key: ${{ secrets.GPG_SIGNING_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+      - name: Configure Ruby
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: 'jruby-9.1.17.0'
       - name: Release war
+        #if: contains(github.ref, 'refs/tags/v')
+        env:
+          OSSRH_USER: ${{ secrets.OSSRH_USER }}
+          OSSRH_PASS: ${{ secrets.OSSRH_PASS }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          bash build.sh
+          gem install bundler --version 1.15.3
+          bundle _1.15.3_ install
+          bash release.sh
