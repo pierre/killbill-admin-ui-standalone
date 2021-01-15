@@ -37,8 +37,8 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://github.com/killbill/killbill-admin-ui-standalone.git</connection>
-        <url>https://github.com/killbill/killbill-admin-ui-standalone/</url>
-        <developerConnection>scm:git:git@github.com:killbill/killbill-admin-ui-standalone.git</developerConnection>
+        <connection>scm:git:git://github.com/pierre/killbill-admin-ui-standalone.git</connection>
+        <url>https://github.com/pierre/killbill-admin-ui-standalone/</url>
+        <developerConnection>scm:git:git@github.com:pierre/killbill-admin-ui-standalone.git</developerConnection>
     </scm>
 </project>
