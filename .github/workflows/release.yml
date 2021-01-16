@@ -3,7 +3,6 @@ name: release
 on:
   push:
 
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -14,7 +13,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
-          server-id: sonatype
+          server-id: ossrh-releases
           server-username: OSSRH_USER
           server-password: OSSRH_PASS
           gpg-private-key: ${{ secrets.GPG_SIGNING_KEY }}
@@ -23,6 +22,14 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 'jruby-9.1.17.0'
+      - name: Download Java dependencies
+        run: |
+          mvn dependency:resolve -Psonatype-oss-release
+          mvn dependency:resolve-plugins -Psonatype-oss-release
+      - name: Download Ruby dependencies
+        run: |
+          gem install bundler --version 1.15.3
+          bundle _1.15.3_ install
       - name: Release war
         #if: contains(github.ref, 'refs/tags/v')
         env:
@@ -30,6 +37,4 @@ jobs:
           OSSRH_PASS: ${{ secrets.OSSRH_PASS }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          gem install bundler --version 1.15.3
-          bundle _1.15.3_ install
-          bash release.sh
+          mvn release:perform
