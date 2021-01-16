@@ -24,12 +24,15 @@ jobs:
           ruby-version: 'jruby-9.1.17.0'
       - name: Download Java dependencies
         run: |
-          mvn dependency:resolve -Psonatype-oss-release
-          mvn dependency:resolve-plugins -Psonatype-oss-release
+          mvn -B --no-transfer-progress dependency:resolve -Psonatype-oss-release
+          mvn -B --no-transfer-progress dependency:resolve-plugins -Psonatype-oss-release
       - name: Download Ruby dependencies
         run: |
           gem install bundler --version 1.15.3
           bundle _1.15.3_ install
+      - name: Build war
+        run: |
+          bash build.sh
       - name: Release war
         #if: contains(github.ref, 'refs/tags/v')
         env:
@@ -37,4 +40,4 @@ jobs:
           OSSRH_PASS: ${{ secrets.OSSRH_PASS }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          mvn release:perform
+          mvn -B --no-transfer-progress deploy -Psonatype-oss-release
